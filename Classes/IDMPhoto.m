@@ -147,24 +147,55 @@ caption = _caption;
             // Load async from file
             [self performSelectorInBackground:@selector(loadImageFromFileAsync) withObject:nil];
         } else if (_photoURL) {
-            // Load async from web (using SDWebImage)
-            SDWebImageManager *manager = [SDWebImageManager sharedManager];
-             [manager downloadImageWithURL:_photoURL
-                                                       options:SDWebImageContinueInBackground
-                                                      progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                                          if (expectedSize > 0) {
-                                                              CGFloat progress = ((CGFloat)expectedSize)/((CGFloat)expectedSize);
-                                                              if (self.progressUpdateBlock) {
-                                                                  self.progressUpdateBlock(progress);
-                                                              }
-                                                          }
-                                                      }
-                                                     completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                                                         self.underlyingImage = image;
-                                                         [self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
-
-                                                     }];
-
+            // Check what type of url it is
+            if ([[[_photoURL scheme] lowercaseString] isEqualToString:@"assets-library"]) {
+                
+                // Load from asset library async
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    @autoreleasepool {
+                        @try {
+                            ALAssetsLibrary *assetslibrary = [[ALAssetsLibrary alloc] init];
+                            [assetslibrary assetForURL:_photoURL
+                                           resultBlock:^(ALAsset *asset){
+                                               ALAssetRepresentation *rep = [asset defaultRepresentation];
+                                               CGImageRef iref = [rep fullScreenImage];
+                                               if (iref) {
+                                                   self.underlyingImage = [UIImage imageWithCGImage:iref];
+                                               }
+                                               [self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
+                                           }
+                                          failureBlock:^(NSError *error) {
+                                              self.underlyingImage = nil;
+                                              NSLog(@"Photo from asset library error: %@",error);
+                                              [self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
+                                          }];
+                        } @catch (NSException *e) {
+                            NSLog(@"Photo from asset library error: %@", e);
+                            [self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
+                        }
+                    }
+                });
+                
+            }
+            else {
+                // Load async from web (using SDWebImage)
+                SDWebImageManager *manager = [SDWebImageManager sharedManager];
+                [manager downloadImageWithURL:_photoURL
+                                      options:SDWebImageContinueInBackground
+                                     progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                         if (expectedSize > 0) {
+                                             CGFloat progress = ((CGFloat)expectedSize)/((CGFloat)expectedSize);
+                                             if (self.progressUpdateBlock) {
+                                                 self.progressUpdateBlock(progress);
+                                             }
+                                         }
+                                     }
+                                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                                        self.underlyingImage = image;
+                                        [self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
+                                        
+                                    }];
+            }
         } else {
             // Failed - no source
             self.underlyingImage = nil;

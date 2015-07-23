@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "IDMPhotoProtocol.h"
 #import "UIImageView+WebCache.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 // This class models a photo/image and it's caption
 // If you want to handle photos, caching, decompression
