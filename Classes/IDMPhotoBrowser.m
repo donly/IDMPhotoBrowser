@@ -294,7 +294,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         firstX = [scrollView center].x;
         firstY = [scrollView center].y;
         
-        //        _senderViewForAnimation.hidden = (_currentPageIndex == _initalPageIndex);
+        _senderViewForAnimation.hidden = (_currentPageIndex == _initalPageIndex);
         
         _isdraggingPhoto = YES;
         [self setNeedsStatusBarAppearanceUpdate];
@@ -314,7 +314,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     if ([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateEnded) {
         if(scrollView.center.y > viewHalfHeight+40 || scrollView.center.y < viewHalfHeight-40) // Automatic Dismiss View
         {
-            if (_senderViewForAnimation /*&& _currentPageIndex == _initalPageIndex*/) {
+            if (_senderViewForAnimation && _currentPageIndex == _initalPageIndex) {
                 [self performCloseAnimationWithScrollView:scrollView];
                 return;
             }
@@ -652,6 +652,9 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     }
     else {
         [_doneButton setBackgroundImage:_doneButtonImage forState:UIControlStateNormal];
+        CGRect frame = _doneButton.frame;
+        frame.size = _doneButtonImage.size;
+        _doneButton.frame = frame;
         _doneButton.contentMode = UIViewContentModeScaleAspectFit;
     }
     
@@ -1136,7 +1139,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     if ([self isLandscape:orientation])
         height = 32;
     
-    return CGRectMake(0, 0, self.view.bounds.size.width, height);
+    return CGRectMake(0, self.view.bounds.size.height - height, self.view.bounds.size.width, height);
 }
 
 - (CGRect)frameForDoneButtonAtOrientation:(UIInterfaceOrientation)orientation {
@@ -1145,7 +1148,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     
     // if ([self isLandscape:orientation]) screenWidth = screenBound.size.height;
     
-    return CGRectMake(screenWidth - 75, 30, 55, 26);
+    return CGRectMake(screenWidth - 15 - 40, 15, 40, 40);
 }
 
 - (CGRect)frameForCaptionView:(IDMCaptionView *)captionView atIndex:(NSUInteger)index {
@@ -1307,7 +1310,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 #pragma mark - Buttons
 
 - (void)doneButtonPressed:(id)sender {
-    if (_senderViewForAnimation /*&& _currentPageIndex == _initalPageIndex*/) {
+    if (_senderViewForAnimation && _currentPageIndex == _initalPageIndex) {
         IDMZoomingScrollView *scrollView = [self pageDisplayedAtIndex:_currentPageIndex];
         [self performCloseAnimationWithScrollView:scrollView];
     }

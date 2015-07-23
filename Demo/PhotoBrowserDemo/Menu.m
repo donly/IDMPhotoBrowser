@@ -111,10 +111,11 @@
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos animatedFromView:sender]; // using initWithPhotos:animatedFromView: method to use the zoom-in animation
     browser.delegate = self;
     browser.displayActionButton = NO;
-    browser.displayArrowButton = YES;
+    browser.displayArrowButton = NO;
     browser.displayCounterLabel = YES;
     browser.usePopAnimation = YES;
     browser.scaleImage = buttonSender.currentImage;
+//    browser.doneButtonImage = [UIImage imageNamed:@"delete"];
     if(buttonSender.tag == 102) browser.useWhiteBackgroundColor = YES;
     
     // Show
