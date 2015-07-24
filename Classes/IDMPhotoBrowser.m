@@ -558,6 +558,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 }
 
 - (void)dismissPhotoBrowserAnimated:(BOOL)animated {
+    //显示statusBar
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     
     [self dismissViewControllerAnimated:animated completion:^{
