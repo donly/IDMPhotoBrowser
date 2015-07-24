@@ -20,6 +20,7 @@
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didShowPhotoAtIndex:(NSUInteger)index;
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didDismissAtPageIndex:(NSUInteger)index;
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didDismissActionSheetWithButtonIndex:(NSUInteger)buttonIndex photoIndex:(NSUInteger)photoIndex;
+- (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didDeletePhotoAtIndex:(NSUInteger)index;
 - (IDMCaptionView *)photoBrowser:(IDMPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index;
 - (UIView *)photoBrowser:(IDMPhotoBrowser *)photoBrowser senderViewAtIndex:(NSUInteger)index;
 @end
@@ -41,6 +42,7 @@
 
 // View customization
 @property (nonatomic) BOOL displayDoneButton;
+@property (nonatomic) BOOL useDoneButtonActionAsDelete;
 @property (nonatomic) BOOL useWhiteBackgroundColor;
 @property (nonatomic, weak) UIImage *doneButtonImage;
 @property (nonatomic, weak) UIColor *trackTintColor, *progressTintColor;

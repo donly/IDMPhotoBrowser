@@ -908,7 +908,14 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 }
 
 - (id<IDMPhoto>)photoAtIndex:(NSUInteger)index {
+    if (_photos.count == 0) {
+        return 0;
+    }
     return _photos[index];
+}
+
+- (void)removePageAtIndex:(NSUInteger)index {
+    [_photos removeObjectAtIndex:index];
 }
 
 - (IDMCaptionView *)captionViewForPhotoAtIndex:(NSUInteger)index {
@@ -1309,7 +1316,23 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 #pragma mark - Buttons
 
 - (void)doneButtonPressed:(id)sender {
-    if (_senderViewForAnimation && _currentPageIndex == _initalPageIndex) {
+    if (_useDoneButtonActionAsDelete) {
+        [self removePageAtIndex:_currentPageIndex];
+        
+        if ([self numberOfPhotos] > 0) {
+            _pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
+            //[_pagingScrollView setContentOffset:<#(CGPoint)#> animated:YES];
+            [self reloadData];
+        }
+        else {
+            [self dismissPhotoBrowserAnimated:YES];
+        }
+        
+        if ([_delegate respondsToSelector:@selector(photoBrowser:didDeletePhotoAtIndex:)]) {
+            [_delegate photoBrowser:self didDeletePhotoAtIndex:_currentPageIndex];
+        }
+    }
+    else if (_senderViewForAnimation && _currentPageIndex == _initalPageIndex) {
         IDMZoomingScrollView *scrollView = [self pageDisplayedAtIndex:_currentPageIndex];
         [self performCloseAnimationWithScrollView:scrollView];
     }

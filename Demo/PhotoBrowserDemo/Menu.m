@@ -114,6 +114,7 @@
     browser.displayArrowButton = NO;
     browser.displayCounterLabel = YES;
     browser.usePopAnimation = YES;
+    browser.useDoneButtonActionAsDelete = YES;
     browser.scaleImage = buttonSender.currentImage;
 //    browser.doneButtonImage = [UIImage imageNamed:@"delete"];
     if(buttonSender.tag == 102) browser.useWhiteBackgroundColor = YES;
