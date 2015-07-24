@@ -400,8 +400,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
 #pragma mark singleTapHanle
 - (void) singleTapHandle {
-    IDMZoomingScrollView *scrollView = [self pageDisplayedAtIndex:_currentPageIndex];
-    [self performCloseAnimationWithScrollView:scrollView];
+    [self doneButtonPressed:nil];
 }
 
 #pragma mark - Animation
