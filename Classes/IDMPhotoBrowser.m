@@ -1316,7 +1316,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 #pragma mark - Buttons
 
 - (void)doneButtonPressed:(id)sender {
-    if (_useDoneButtonActionAsDelete) {
+    if (sender != nil && _useDoneButtonActionAsDelete) {
         [self removePageAtIndex:_currentPageIndex];
         
         if ([self numberOfPhotos] > 0) {
