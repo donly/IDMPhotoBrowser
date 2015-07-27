@@ -1321,6 +1321,9 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 - (void)doneButtonPressed:(id)sender {
     if (sender != nil && _useDoneButtonActionAsDelete) {
         [self removePageAtIndex:_currentPageIndex];
+        if ([_delegate respondsToSelector:@selector(photoBrowser:didDeletePhotoAtIndex:)]) {
+            [_delegate photoBrowser:self didDeletePhotoAtIndex:_currentPageIndex];
+        }
         
         if ([self numberOfPhotos] > 0) {
             _pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
@@ -1329,10 +1332,6 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         }
         else {
             [self dismissPhotoBrowserAnimated:YES];
-        }
-        
-        if ([_delegate respondsToSelector:@selector(photoBrowser:didDeletePhotoAtIndex:)]) {
-            [_delegate photoBrowser:self didDeletePhotoAtIndex:_currentPageIndex];
         }
     }
     else if (_senderViewForAnimation && _currentPageIndex == _initalPageIndex) {
