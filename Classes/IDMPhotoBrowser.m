@@ -881,6 +881,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     
     // Content offset
     _pagingScrollView.contentOffset = [self contentOffsetForPageAtIndex:_currentPageIndex];
+    [_pagingScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self tilePages];
     _performingLayout = NO;
     
